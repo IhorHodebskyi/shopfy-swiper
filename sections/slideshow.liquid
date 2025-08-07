@@ -50,12 +50,11 @@
 <script type="module" defer>
   import Swiper from "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs";
   
-  const remToPx = (rem) =>
-    rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+ 
     
     new Swiper('.slideshow .swiper', {
       slidesPerView: {{ section.settings.slides_per_view_mobile }},
-      spaceBetween: remToPx( {{ section.settings.space_between }} ),
+      spaceBetween:  {{ section.settings.space_between }} ,
       loop: {{ section.settings.loop }},
       {% if section.settings.pagination %}
       pagination: {
