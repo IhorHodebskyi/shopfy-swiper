@@ -60,7 +60,7 @@
         "pagination": true,
         "navigation": true,
         "loop": true,
-        "space_between": 1
+        "space_between": 16
       }
     }
   },
