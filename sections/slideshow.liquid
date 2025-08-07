@@ -1,16 +1,77 @@
-{{ 'section-image-banner.css' | asset_url | stylesheet_tag }}
-{{ 'component-slider.css' | asset_url | stylesheet_tag }}
-{{ 'component-slideshow.css' | asset_url | stylesheet_tag }}
+{{ 'slideshow.css' | asset_url | stylesheet_tag }}
+
 
 {% assign collection = collections['all'] %}
 
-{% for product in collection.products %}
-  <div>
-    <h3>{{ product.title }}</h3>
-    <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-    <p>{{ product.price | money }}</p>
+<div class="slideshow">
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      {% for product in collection.products %}
+        <div class="swiper-slide">
+          <img src="{{ product.featured_image | img_url: 'medium' }}" 
+          alt="{{ product.title }} "
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}" 
+          loading="lazy">  
+        </div>  
+      {% endfor %}
+    </div>
+
+    <div class="swiper-controls">
+      {% if section.settings.navigation %}
+        <div class="swiper-button-prev">
+          {{ 'ArrowRight.svg' | asset_url | img_tag: 'Previous' }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.pagination %}
+        <div class="swiper-pagination"></div>
+      {% endif %}
+
+      {% if section.settings.navigation %}
+        <div class="swiper-button-next">
+          {{ 'ArrowRight.svg' | asset_url | img_tag: 'Next' }}
+        </div>
+      {% endif %}
+    </div>
   </div>
-{% endfor %}
+</div>
+
+
+
+<script type="module" defer>
+  import Swiper from "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs";
+  
+  const remToPx = (rem) =>
+    rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    
+    new Swiper('.slideshow .swiper', {
+      slidesPerView: {{ section.settings.slides_per_view_mobile }},
+      spaceBetween: remToPx( {{ section.settings.space_between }} ),
+      loop: {{ section.settings.loop }},
+      {% if section.settings.pagination %}
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      {% endif %}
+      {% if section.settings.navigation %}
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      {% endif %}
+      breakpoints: {
+        768: {
+          slidesPerView: {{ section.settings.slides_per_view_tablet }}
+        },
+        1024: {
+          slidesPerView: {{ section.settings.slides_per_view_desktop }}   
+        }
+      }
+    });
+
+</script>
 
 
 {% schema %}
@@ -23,6 +84,51 @@
       "type": "product",
       "id": "product",
       "label": "Вибрати товар"
+    },
+    {
+      "type": "number",
+      "id": "slides_per_view_mobile",
+      "label": "Кількість слайдів одночасно на мобільних пристроях",
+      "default": 1
+    },
+    {
+      "type": "number",
+      "id": "slides_per_view_tablet",
+      "label": "Кількість слайдів одночасно на планшетах",
+      "default": 2
+    },
+    {
+      "type": "number",
+      "id": "slides_per_view_desktop",
+      "label": "Кількість слайдів одночасно на десктопах",
+      "default": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "pagination",
+      "label": "Увімкнути пагінацію",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "navigation",
+      "label": "Увімкнути стрілки навігації",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Увімкнути циклічність",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "space_between",
+      "label": "Відступ між слайдами (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10
     }
   ],
   "presets": [
@@ -31,4 +137,5 @@
     }
   ]
 }
+
 {% endschema %}
