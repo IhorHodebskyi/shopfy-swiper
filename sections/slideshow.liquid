@@ -3,21 +3,27 @@
 
 {% assign collection = collections['all'] %}
 
-<div class="slideshow">
+<section class="slideshow"  >
+
+<div class="container">
+  <div class="slideshow_wrapper">
   <div class="swiper">
     <div class="swiper-wrapper">
       {% for product in collection.products %}
         <div class="swiper-slide">
-          <img src="{{ product.featured_image | img_url: 'medium' }}" 
+        <div class="slideshow_item">
+            <img src="{{ product.featured_image | img_url: 'medium' }}" 
           alt="{{ product.title }} "
           width="{{ product.featured_image.width }}"
           height="{{ product.featured_image.height }}" 
           loading="lazy">  
+        </div>
         </div>  
       {% endfor %}
     </div>
+  </div>
 
-    <div class="swiper-controls">
+      <div class="swiper-controls">
       {% if section.settings.navigation %}
         <div class="swiper-button-prev">
           {{ 'ArrowRight.svg' | asset_url | img_tag: 'Previous' }}
@@ -34,8 +40,10 @@
         </div>
       {% endif %}
     </div>
-  </div>
 </div>
+</div>
+
+</section>
 
 
 
